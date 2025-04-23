@@ -47,7 +47,6 @@ def ai_advice():
             f"体温：{r['temperature']}°C"
         )
     prompt = "\n".join(prompt_lines)
-
     # 调用 DeepSeek-V3-0324 聊天完成接口
     completion = client.chat.completions.create(
         model="deepseek-ai/DeepSeek-V3-0324",

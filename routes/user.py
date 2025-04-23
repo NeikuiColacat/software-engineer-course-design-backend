@@ -17,10 +17,11 @@ def register():
         return jsonify({"error": "Missing parameters"}), 400
 
     if mongo.db.users.find_one({"username": username}):
+        print("dulpicated !!! ")
         return jsonify({"error": "User already exists"}), 400
 
     hashed = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
-    result = mongo.db.users.insert_one({
+    mongo.db.users.insert_one({
         "username": username,
         "password": hashed,
         "device_id": device_id,
@@ -28,6 +29,7 @@ def register():
         "profile": {},
     })
 
+    print("reg sueccess !!!!!")
     return jsonify({
         "message": "Registered successfully",
     }), 201
