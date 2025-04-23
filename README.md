@@ -1,5 +1,4 @@
 # 后端 API 文档
-
 ## 基础 URL  
 
 http://<服务器IP>:5000
@@ -16,7 +15,8 @@ http://<服务器IP>:5000
   {
     "username": "string",    // 必填，用户名
     "password": "string",    // 必填，密码
-    "device_id": "string"    // 必填，设备 ID，与用户绑定
+    "device_id": "string",    // 必填，设备 ID，与用户绑定
+    "role": "string" - "manager" or "user"    // 必填，设备 ID，与用户绑定
   }
 
   //成功响应(201)
@@ -118,6 +118,7 @@ http://<服务器IP>:5000
     {
         "username": "alice",
         "device_id": "5117",
+        "role" : "manager or user",
         "profile": 
         {
             "height": 170,
