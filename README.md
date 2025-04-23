@@ -152,3 +152,27 @@ http://<服务器IP>:5000
     }
   ]
   ```
+
+### 3. 更新用户的Profile
+- URL  
+  `PUT /manage/update_profile`  
+
+  ```json
+  //请求json body
+  {
+    "username": "carol",     // 必填，目标用户名
+    "height": 165,           // 选填，身高（厘米）
+    "age": 28,               // 选填，年龄（岁）
+    "weight": 55             // 选填，体重（公斤）
+  }
+  //成功响应(200)
+  {
+    "message": "Profile updated successfully"
+  }
+  // 错误 (400 404 500)
+  { "error": "Missing parameters" }
+  { "error": "No valid fields to update" }
+  { "error": "User not found" }
+  { "error": "详细错误信息" }
+
+  ```
