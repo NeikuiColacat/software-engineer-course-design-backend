@@ -179,7 +179,7 @@ http://<服务器IP>:5000
 
 ## LLM 接口
 
-URL : `POST /hugging_face/ai_advice`
+URL : `POST /ai_advice`
 ```json
 //Body
 {
