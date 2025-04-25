@@ -103,7 +103,7 @@ http://<服务器IP>:5000
 
 ## 二、`manage` 模块
 
-### 1. 更新profile 
+### 1. 获取profile 
 - URL  
   `PUT /manage/get_profile`  
   
