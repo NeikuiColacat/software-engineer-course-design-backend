@@ -1,7 +1,9 @@
 import pytest
 import os
-from datetime import datetime , timedelta
+from datetime import datetime , timedelta , timezone
 from app import app
+import random
+import pytz 
 from models.db import mongo   # 从 db.py 直接 import mongo
 
 
@@ -11,20 +13,11 @@ def client():
     with app.test_client() as c:
         yield c
 
-def test_user_login_success(client):
-    # 先注册一个用户
-    rv = client.post("/user/register", json={
-        "username": "testuser",
-        "password": "mypassword",
-        "role":     "user",
-        "device_id":"DEV100"
-    })
-    assert rv.status_code == 201
-
+def test_login(client):
     # 登录这个用户
     rv = client.post("/user/login", json={
-        "username": "testuser",
-        "password": "mypassword"
+        "username": "12",
+        "password": "12"
     })
     assert rv.status_code == 200
     data = rv.get_json()
@@ -75,7 +68,7 @@ def test_manage_update_and_get_profile(client):
 
 def test_insert_health_data_for_user():
     """
-    为指定用户名的设备插入 count 条健康数据，timestamp 间隔 1 分钟。
+    为指定用户名的设备插入 count 条健康数据，timestamp 随机化日期和时间。
     """
     username = "12"
     cnt = 10
@@ -84,26 +77,29 @@ def test_insert_health_data_for_user():
     if not user:
         raise ValueError(f"User '{username}' not found in database")
     device_id = user["device_id"]
-    base_time = datetime.utcnow()
     print(device_id)
 
-    docs = [
-        {
-            "device_id": '12',
-            "timestamp": base_time + timedelta(minutes=i),
+    docs = []
+    for i in range(cnt):
+        random_minutes = random.randint(0, 59)  # 随机分钟
+        random_seconds = random.randint(0, 59)  # 随机秒
+
+        random_time = datetime.now(timezone.utc) + timedelta(
+            minutes=random_minutes, seconds=random_seconds
+        )
+
+        docs.append({
+            "device_id": "11",
+            "timestamp": random_time,
             "spo2": 95 + (i % 5),
             "heartRate": 60 + i * 2,
-            "temperature": 36.0 + i * 0.1
-        }
-        for i in range(cnt)
-    ]
+            "temperature": 36.0 + i * 0.2
+        })
+
     mongo.db.health_data.insert_many(docs)
     assert(True)
 
 def test_user_bind_device():
-    """
-    为指定用户名的设备插入 count 条健康数据，timestamp 间隔 1 分钟。
-    """
     username = "12"
     cnt = 10
 
@@ -119,7 +115,11 @@ def test_get_health_data(client):
 
     rv = client.post("/query_health", json={"username": "12"})
     data = rv.get_json()
-    print(data)
+    data = data["data"]
+
+    time = [i["timestamp"] for i in data]
+
+    print(time)
 
 
 # 确保 Hugging Face Token 已设置，否则跳过测试
@@ -132,3 +132,7 @@ def test_ai_advice(client):
     data = rv.get_json()
     assert(data != None)
     print(data)
+
+def test_time():
+    print(datetime.now())
+    print(datetime.now(timezone.utc))
