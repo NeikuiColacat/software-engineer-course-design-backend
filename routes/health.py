@@ -26,7 +26,7 @@ def upload_health_from_url():
         # 构建记录
         record = {
             "device_id": terminal + device,
-            "timestamp": datetime.now(timezone.utc),  # 使用当前时间作为时间戳
+            "timestamp": datetime.now(),  # 使用当前时间作为时间戳
             "spo2": int(spo2),
             "heartRate": int(heartrate),
             "temperature": float(temp)
@@ -82,7 +82,7 @@ def query_health():
     # 构建返回结果
     result = []
     for doc in cursor:
-        cur_time = convert_to_east_eight(doc["timestamp"].isoformat())
+        cur_time = (doc["timestamp"].isoformat())
         result.append({
             "timestamp": cur_time, 
             "spo2": doc.get("spo2"),
